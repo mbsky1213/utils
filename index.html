@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>获取图片</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        #content {
+            text-indent: 2em;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id='title'></h1>
+    <div id='content'></div>
+    <script>
+        async function $get(url, data = {}) {
+            var res = await $.ajax({
+                url,
+                data
+            }).then(res => {
+                if (typeof res !== 'object') {
+                    return JSON.parse(res);
+                }
+                return res
+            });
+            if (res.code == 200) {
+                return [res.data, null];
+            } else {
+                return [null, res.msg];
+            }
+        }
+        $(async function () {
+            let host = `https://fathomless-scrubland-09364.herokuapp.com`;
+            let res = await $.get(host + '/getApi')
+            res.status && (host += res.url);
+
+            // 获取qq信息
+            let [ret, err] = await $get(host + '/QqInfo', { qq: 1484851104 })
+            if (!err) console.log('获取qq信息=>', ret);
+
+            // 舔狗日记
+            [ret, err] = await $get(host + '/tiangourj')
+            if (!err) console.log('舔狗日记=>', ret);
+
+            //身份证信息查询
+            [ret, err] = await $get(host + '/IdCardCx', { card: 430723199701203811 })
+            if (!err) console.log('身份证信息查询=>', ret);
+
+            //毒鸡汤
+            [ret, err] = await $get(host + '/dujitang')
+            if (!err) {
+                console.log('毒鸡汤=>', ret)
+                $('#title').text('毒鸡汤')
+                $('#content').text(ret.comment)
+            };
+
+            //随机笑话
+            [ret, err] = await $get(host + '/xiaohua')
+            if (!err) {
+                console.log('随机笑话=>', ret)
+                $('#title').text(ret.title)
+                $('#content').text(ret.content)
+            };
+
+            //彩虹屁
+            [ret, err] = await $get(host + '/caihongpi')
+            if (!err) {
+                console.log('随机笑话=>', ret)
+                $('#title').text('彩虹屁')
+                $('#content').text(ret.comment)
+            };
+
+        })
+    </script>
+</body>
+
+</html>

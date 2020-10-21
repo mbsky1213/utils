@@ -48,7 +48,7 @@ export const flat = (() => {
         return arr.reduce((total, current) => {
             // 如果不是数组
             if (!Array.isArray(current)) return [...total, current];
-            // 如果如果到达扁平层级
+            // 如果到达扁平层级
             if (index === num) {
                 index = 0;
                 return [...total, current];
